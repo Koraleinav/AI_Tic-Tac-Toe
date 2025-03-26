@@ -1,0 +1,22 @@
+<div class="game-container">
+    <h1>Tic-Tac-Toe</h1>
+  
+    <div class="board">
+      <button *ngFor="let _ of board; let i = index"
+              (click)="makeMove(i)"
+              [ngClass]="'cell ' + getCellClass(i)"
+              [disabled]="board[i] || winner || isDraw">
+        {{ board[i] }}
+      </button>
+    </div>
+  
+    <div *ngIf="winner" class="message">
+      Winner: {{ winner }}
+    </div>
+  
+    <div *ngIf="isDraw && !winner" class="message">
+      It's a draw!
+    </div>
+  
+    <button (click)="startNewGame()">New Game</button>
+  </div>
