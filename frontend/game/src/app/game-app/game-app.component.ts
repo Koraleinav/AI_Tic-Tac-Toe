@@ -27,7 +27,7 @@ export class GameAppComponent implements OnInit {
 
   private gameService = inject(GameService);
 
-  // Declare the winning lines 
+  // Declare the winning lines
   private readonly lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -47,7 +47,7 @@ export class GameAppComponent implements OnInit {
 
   setGameMode(mode: 'playerVsPlayer' | 'playerVsComputer'): void {
     this.gameMode = mode;
-    this.startNewGame(); 
+    this.startNewGame();
   }
 
   startNewGame() : void{
@@ -89,7 +89,7 @@ export class GameAppComponent implements OnInit {
       this.updateWinningStreak();
 
       if (this.gameMode === 'playerVsComputer' && !this.winner && !this.isDraw && this.currentPlayer === 'O') {
-        setTimeout(() => { 
+        setTimeout(() => {
           this.computerMove();
         }, 500);
       }
@@ -121,48 +121,84 @@ export class GameAppComponent implements OnInit {
     }
   }
 
+  bestMove(): number {
+    let bestScore = -Infinity;
+    let move = -1;
+
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i] === null) {
+        this.board[i] = 'O';
+        let score = this.minimax(this.board, false); // 'false' because the human player will play next
+        this.board[i] = null; // Undo the move
+
+        if (score > bestScore) {
+          bestScore = score;
+          move = i;
+        }
+      }
+    }
+    return move;
+  }
+
+  minimax(board: (string | null)[], isMaximizing: boolean): number {
+    const winner = this.checkWinner(board);
+    if (winner === 'O') {
+      return 10;
+    }
+    if (winner === 'X') {
+      return -10;
+    }
+    if (this.isTie(board)) {
+      return 0;
+    }
+
+    if (isMaximizing) {
+      let bestScore = -Infinity;
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === null) {
+          board[i] = 'O';
+          let score = this.minimax(board, false);
+          board[i] = null;
+          bestScore = Math.max(score, bestScore);
+        }
+      }
+      return bestScore;
+    } else {
+      let bestScore = Infinity;
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === null) {
+          board[i] = 'X';
+          let score = this.minimax(board, true);
+          board[i] = null;
+          bestScore = Math.min(score, bestScore);
+        }
+      }
+      return bestScore;
+    }
+  }
+
+  checkWinner(boardToCheck: (string | null)[]): string | null {
+    for (const line of this.lines) {
+      const [a, b, c] = line;
+      if (boardToCheck[a] && boardToCheck[a] === boardToCheck[b] && boardToCheck[a] === boardToCheck[c]) {
+        return boardToCheck[a];
+      }
+    }
+    return null;
+  }
+
+  isTie(boardToCheck: (string | null)[]): boolean {
+    return boardToCheck.every(cell => cell !== null) && !this.checkWinner(boardToCheck);
+  }
+
   computerMove(): void {
     if (!this.gameId || this.winner || this.isDraw || this.currentPlayer !== 'O') {
       return;
     }
 
-    let bestMove: number | null = null;
-
-    // 1. Check if computer can win
-    bestMove = this.findWinningMove('O');
-    if (bestMove !== null) {
-      this.makeMove(bestMove);
-      return;
-    }
-
-    // 2. Check if player can win and block
-    bestMove = this.findWinningMove('X');
-    if (bestMove !== null) {
-      this.makeMove(bestMove);
-      return;
-    }
-
-    // 3. Take the center if it's free
-    if (this.board[4] === null) {
-      this.makeMove(4);
-      return;
-    }
-
-    // 4. Take a corner if it's free
-    const corners = [0, 2, 6, 8];
-    for (const corner of corners) {
-      if (this.board[corner] === null) {
-      this.makeMove(corner);
-        return;
-      }
-    }
-
-    // 5. Take any other free cell
-    for (let i = 0; i < this.board.length; i++) {
-      if (this.board[i] === null) {
-      this.makeMove(i);
-        return;
-      }
+    const move = this.bestMove();
+    if (move !== -1) {
+      this.makeMove(move);
     }
   }
 
@@ -180,7 +216,7 @@ export class GameAppComponent implements OnInit {
   }
 
   checkWin(boardToCheck: (string | null)[], player: 'X' | 'O'): boolean {
-    for (const line of this.lines) { 
+    for (const line of this.lines) {
       const [a, b, c] = line;
       if (boardToCheck[a] === player && boardToCheck[b] === player && boardToCheck[c] === player) {
         return true;
