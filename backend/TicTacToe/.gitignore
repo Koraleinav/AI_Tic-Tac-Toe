@@ -1,0 +1,45 @@
+### Python ###
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+venv/
+.venv/
+env/
+envs/
+
+# Eggs
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+sdist/
+
+### Django ###
+*.log
+*.pot
+*.sqlite3
+local_settings.py
+media/  # If you don't want to track user-uploaded media
+
+# Static files (collected by Django's collectstatic command)
+static/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### IDEs and Editors ###
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmproj
+*.sublime-project
+*.sublime-workspace
+
+### Packages ###
+node_modules/
