@@ -71,8 +71,6 @@ export class GameAppComponent implements OnInit {
     this.currentPlayer = 'X'; // Player X always starts.
     this.winner = null;
     this.isDraw = false;
-    this.resetStats();
-    this.currentPlayerStreak = null;
     // Remove any previous animation classes
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => cell.classList.remove('animate'));
@@ -155,8 +153,9 @@ export class GameAppComponent implements OnInit {
         this.currentPlayerStreak = 'O';
       }
     } else if (this.isDraw) {
-      this.resetStats();
-      this.currentPlayerStreak = null; // Also reset on a draw for consistency
+      this.currentPlayerStreak = null;
+      this.winningStreakX = 0; 
+      this.winningStreakO = 0;
     }
   }
 
