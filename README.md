@@ -107,7 +107,9 @@ The game is a draw if all nine cells on the board are filled, and neither player
 
 ## ✍️ Author
 
-[Your Name/GitHub Username]
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-lightgrey?style=for-the-badge&logo=github)](https://github.com/Koraleinav)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/koral-einav/)
+
 
 ---
 
