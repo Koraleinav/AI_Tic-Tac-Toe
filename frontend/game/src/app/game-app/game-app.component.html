@@ -1,14 +1,18 @@
 <div class="game-container">
     <h1>Tic-Tac-Toe</h1>
   
-    <div class="board">
-      <button *ngFor="let _ of board; let i = index"
-              (click)="makeMove(i)"
-              [ngClass]="'cell ' + getCellClass(i)"
-              [disabled]="board[i] || winner || isDraw">
-        {{ board[i] }}
-      </button>
+    <div class="status" *ngIf="!winner && !isDraw">
+      Current Player: {{ currentPlayer }}
     </div>
+  
+    <div class="board">
+        <button *ngFor="let value of board; let i = index"
+                (click)="makeMove(i)"
+                [ngClass]="{'cell': true, 'x': value === 'X', 'o': value === 'O', 'winner-highlight': winningCombination?.includes(i)}"
+                [disabled]="value || winner || isDraw">
+          {{ value }}
+        </button>
+      </div>
   
     <div *ngIf="winner" class="message">
       Winner: {{ winner }}

@@ -15,6 +15,7 @@ export class GameAppComponent implements OnInit {
   winner: string | null = null;
   isDraw: boolean = false;
   gameId: number | null = null;
+  winningCombination: number[] | null = null;
   private gameService = inject(GameService);
 
   constructor(){}
@@ -30,6 +31,7 @@ export class GameAppComponent implements OnInit {
     this.currentPlayer = 'X';
     this.winner = null;
     this.isDraw = false;
+    this.winningCombination = null;
     });
   }
 
@@ -47,7 +49,30 @@ export class GameAppComponent implements OnInit {
       this.currentPlayer = response.current_player;
       this.winner = response.winner;
       this.isDraw = response.is_draw;
+      this.winningCombination = this.checkWinningCombination(this.board); 
+      console.log("Winner:", this.winner, "Winning Combination:", this.winningCombination); // Add this line
+
     });
+  }
+
+  checkWinningCombination(board: (string | null)[]): number[] | null {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (const line of lines) {
+      const [a, b, c] = line;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return line; // Return the indices of the winning line
+      }
+    }
+    return null;
   }
 
     getCellClass(index: number): string {
