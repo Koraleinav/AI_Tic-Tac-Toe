@@ -6,13 +6,13 @@
     </div>
   
     <div class="board">
-        <button *ngFor="let value of board; let i = index"
-                (click)="makeMove(i)"
-                [ngClass]="{'cell': true, 'x': value === 'X', 'o': value === 'O', 'winner-highlight': winningCombination?.includes(i)}"
-                [disabled]="value || winner || isDraw">
-          {{ value }}
-        </button>
-      </div>
+      <button *ngFor="let value of board; let i = index"
+              (click)="makeMove(i)"
+              [ngClass]="{'cell': true, 'x': value === 'X', 'o': value === 'O', 'winner-highlight': winningCombination?.includes(i)}"
+              [disabled]="value || winner || isDraw">
+        {{ value }}
+      </button>
+    </div>
   
     <div *ngIf="winner" class="message">
       Winner: {{ winner }}
@@ -22,5 +22,17 @@
       It's a draw!
     </div>
   
+    <div class="score">
+      <p>Player X Wins: {{ playerXWins }}</p>
+      <p>Player O Wins: {{ playerOWins }}</p>
+    </div>
+  
+    <div class="streak" *ngIf="winningStreakX > 0 || winningStreakO > 0">
+      <p *ngIf="winningStreakX > 0">Player X Winning Streak: {{ winningStreakX }}</p>
+      <p *ngIf="winningStreakO > 0">Player O Winning Streak: {{ winningStreakO }}</p>
+    </div>
+  
     <button (click)="startNewGame()">New Game</button>
+    <button (click)="resetStats()">Reset Stats</button> 
+
   </div>

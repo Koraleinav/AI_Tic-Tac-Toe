@@ -11,11 +11,17 @@ import { CommonModule } from '@angular/common';
 })
 export class GameAppComponent implements OnInit {
   board: (string | null)[] = Array(9).fill(null);
-  currentPlayer : 'X' | 'O' = 'X';
+  currentPlayer: 'X' | 'O' = 'X';
   winner: string | null = null;
   isDraw: boolean = false;
   gameId: number | null = null;
   winningCombination: number[] | null = null;
+  playerXWins: number = 0;
+  playerOWins: number = 0;
+  winningStreakX: number = 0;
+  winningStreakO: number = 0;
+  currentPlayerStreak: 'X' | 'O' | null = null;
+
   private gameService = inject(GameService);
 
   constructor(){}
@@ -23,7 +29,7 @@ export class GameAppComponent implements OnInit {
   ngOnInit(): void {
     this.startNewGame();
   }
-    
+
   startNewGame() : void{
     this.gameService.startNewGame().subscribe(response => {
     this.gameId = response.id;
@@ -32,7 +38,17 @@ export class GameAppComponent implements OnInit {
     this.winner = null;
     this.isDraw = false;
     this.winningCombination = null;
+    this.resetStats();
+    this.currentPlayerStreak = null;
     });
+  }
+
+  resetStats(): void {
+    this.playerXWins = 0;
+    this.playerOWins = 0;
+    this.winningStreakX = 0;
+    this.winningStreakO = 0;
+    this.currentPlayerStreak = null;
   }
 
   makeMove(index: number): void {
@@ -49,9 +65,30 @@ export class GameAppComponent implements OnInit {
       this.currentPlayer = response.current_player;
       this.winner = response.winner;
       this.isDraw = response.is_draw;
-      this.winningCombination = this.checkWinningCombination(this.board); 
-      console.log("Winner:", this.winner, "Winning Combination:", this.winningCombination); // Add this line
+      this.winningCombination = this.checkWinningCombination(this.board);
+      console.log("Winner:", this.winner, "Winning Combination:", this.winningCombination); 
 
+      if (this.winner === 'X') {
+        this.playerXWins++;
+        if (this.currentPlayerStreak === 'X') {
+          this.winningStreakX++;
+        } else {
+          this.winningStreakX = 1;
+          this.winningStreakO = 0; 
+          this.currentPlayerStreak = 'X';
+        }
+      } else if (this.winner === 'O') {
+        this.playerOWins++;
+        if (this.currentPlayerStreak === 'O') {
+          this.winningStreakO++;
+        } else {
+          this.winningStreakO = 1;
+          this.winningStreakX = 0;
+          this.currentPlayerStreak = 'O';
+        }
+      } else if (this.isDraw) {
+          this.resetStats();
+      }
     });
   }
 
@@ -69,7 +106,7 @@ export class GameAppComponent implements OnInit {
     for (const line of lines) {
       const [a, b, c] = line;
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        return line; // Return the indices of the winning line
+        return line;
       }
     }
     return null;
@@ -80,4 +117,3 @@ export class GameAppComponent implements OnInit {
     }
 
 }
-
