@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-interface GameResponse {
+interface NewGameResponse {
   id: number;
-  board: (string | null);
+}
+
+interface MoveResponse {
+  board: (string | null)[];
   current_player: 'X' | 'O';
   winner: string | null;
   is_draw: boolean;
@@ -18,15 +21,11 @@ export class GameService {
 
   constructor(private http: HttpClient) { }
 
-  startNewGame(): Observable<GameResponse> {
-    return this.http.post<GameResponse>(`${this.apiUrl}/new/`, {});
+  startNewGame(): Observable<NewGameResponse> {
+    return this.http.post<NewGameResponse>(`${this.apiUrl}/new/`, {});
   }
 
-  makeMove(gameId: number, position: number): Observable<GameResponse> {
-    return this.http.put<GameResponse>(`${this.apiUrl}/${gameId}/move/`, { position });
-  }
-
-  getGameState(gameId: number): Observable<GameResponse> {
-    return this.http.get<GameResponse>(`${this.apiUrl}/${gameId}/`);
+  makeMove(gameId: number, moveIndex: number): Observable<MoveResponse> {
+    return this.http.put<MoveResponse>(`${this.apiUrl}/${gameId}/move/`, { position: moveIndex });
   }
 }

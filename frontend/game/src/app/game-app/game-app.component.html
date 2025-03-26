@@ -1,6 +1,14 @@
 <div class="game-container">
     <h1>Tic-Tac-Toe</h1>
+    
+    <div class="mode-selection">
+      <input type="radio" id="playerVsPlayer" name="gameMode" value="playerVsPlayer" (change)="setGameMode('playerVsPlayer')" [checked]="gameMode === 'playerVsPlayer'">
+      <label for="playerVsPlayer">Player vs Player</label>
   
+      <input type="radio" id="playerVsComputer" name="gameMode" value="playerVsComputer" (change)="setGameMode('playerVsComputer')">
+      <label for="playerVsComputer">Player vs Computer</label>
+    </div>
+
     <div class="status" *ngIf="!winner && !isDraw">
       Current Player: {{ currentPlayer }}
     </div>
@@ -31,8 +39,10 @@
       <p *ngIf="winningStreakX > 0">Player X Winning Streak: {{ winningStreakX }}</p>
       <p *ngIf="winningStreakO > 0">Player O Winning Streak: {{ winningStreakO }}</p>
     </div>
-  
-    <button class ="buttons-container" (click)="startNewGame()">New Game</button>
-    <button class ="buttons-container" (click)="resetStats()">Reset Stats</button>
+
+  <div class ="buttons-container">
+    <button (click)="startNewGame()">New Game</button>
+    <button (click)="resetStats()">Reset Stats</button>
+  </div>
 
   </div>
