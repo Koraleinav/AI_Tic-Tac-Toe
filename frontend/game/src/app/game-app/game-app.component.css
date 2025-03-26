@@ -112,8 +112,7 @@
   
   .buttons-container { 
     display: flex;
-    gap: 15px; 
-    margin-bottom: 20px;
+    margin: 10px;
   }
   
   button {
