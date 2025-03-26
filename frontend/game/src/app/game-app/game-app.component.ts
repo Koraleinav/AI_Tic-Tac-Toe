@@ -73,6 +73,9 @@ export class GameAppComponent implements OnInit {
     this.isDraw = false;
     this.resetStats();
     this.currentPlayerStreak = null;
+    // Remove any previous animation classes
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => cell.classList.remove('animate'));
     });
   }
 
@@ -103,6 +106,13 @@ export class GameAppComponent implements OnInit {
     this.gameService.makeMove(this.gameId, index).subscribe(response => {
       if (response && response.board && Array.isArray(response.board)) {
         this.board = [...response.board] as (string | null)[];
+        // Add animation class with a slight delay
+        setTimeout(() => {
+          const cellElement = document.querySelector(`.board button:nth-child(${index + 1})`) as HTMLElement;
+          if (cellElement) {
+            cellElement.classList.add('animate');
+          }
+        }, 0);
       } else {
         console.error("Invalid board data received from the backend:", response);
       }
@@ -264,7 +274,25 @@ export class GameAppComponent implements OnInit {
 
     const move = this.bestMove();
     if (move !== -1) {
-      this.makeMove(move);
+      this.gameService.makeMove(this.gameId, move).subscribe(response => {
+        if (response && response.board && Array.isArray(response.board)) {
+          this.board = [...response.board] as (string | null)[];
+          // Add animation class with a slight delay
+          setTimeout(() => {
+            const cellElement = document.querySelector(`.board button:nth-child(${move + 1})`) as HTMLElement;
+            if (cellElement) {
+              cellElement.classList.add('animate');
+            }
+          }, 0);
+        } else {
+          console.error("Invalid board data received from the backend:", response);
+        }
+        this.currentPlayer = response.current_player;
+        this.winner = response.winner;
+        this.isDraw = response.is_draw;
+
+        this.updateWinningStreak();
+      });
     }
   }
 
