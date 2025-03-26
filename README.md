@@ -1,4 +1,4 @@
-# 🕹️ Angular Tic-Tac-Toe Game
+# 🕹️ AI Tic-Tac-Toe Game
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Angular](https://img.shields.io/badge/Angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)
